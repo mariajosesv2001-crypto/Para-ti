@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Para ti</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*,*::before,*::after{box-sizing:inherit}
+html,body{height:100%;margin:0;background:#0d1226;color:#e8f1ff;font-family:"Press Start 2P",ui-monospace,Menlo,monospace;overflow:hidden;-webkit-user-select:none;user-select:none}
+.st{position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:16px}
+.st.on{display:flex}
+/* BOOT */
+#boot{background:radial-gradient(circle at 50% 40%,#3a3550,#14111f)}
+.mac{width:min(84vw,340px);background:#e9e2d2;border-radius:18px 18px 10px 10px;padding:20px 20px 14px;box-shadow:0 20px 50px #000a,inset 0 -6px 0 #cfc7b3}
+.scr{background:#a9cdf5;border:9px solid #16151a;border-radius:14px;aspect-ratio:4/3.3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:8px;color:#1b2a3a;text-align:center;box-shadow:inset 0 0 24px #5b88c0}
+.scr canvas{width:72px;image-rendering:pixelated}
+.scr p{margin:0;font-size:10px;line-height:1.7}
+.blink{animation:bl 1s steps(2) infinite}@keyframes bl{50%{opacity:.15}}
+.bar{width:80%;height:10px;border:2px solid #1b2a3a;display:none}.bar i{display:block;height:100%;width:0;background:#1b2a3a;transition:width 1.6s linear}
+.mfoot{display:flex;justify-content:flex-end;align-items:center;margin-top:16px}
+.slot{width:46%;height:9px;background:#3b3a3a;border-radius:2px;box-shadow:0 0 0 4px #d8d0bc;cursor:pointer}
+#floppy{width:84px;height:84px;background:#2b2f3a;border-radius:4px 14px 4px 4px;position:relative;cursor:pointer;animation:fl 1.6s ease-in-out infinite;box-shadow:0 6px 14px #0008;transition:transform 1s ease-in,opacity .3s 1s}
+#floppy::before{content:"";position:absolute;left:22%;top:0;width:56%;height:34%;background:#c4c9d2;border-radius:0 0 3px 3px}
+#floppy::after{content:"DISCO DURO";position:absolute;left:8%;right:8%;bottom:7%;height:34%;background:#f1ead8;color:#222;font-size:7px;display:flex;align-items:center;justify-content:center}
+#floppy.in{animation:none;transform:translateY(-150px) scale(.55);opacity:0}
+@keyframes fl{50%{transform:translateY(-8px)}}
+.hint{font-size:9px;color:#cfc8e8}
+/* GAME */
+#game{background:#9bbc3a;color:#1f2b0f;gap:12px}
+.hud{width:min(92vw,56vh,360px);display:flex;justify-content:space-between;font-size:14px}
+#cv{width:min(92vw,56vh,360px);aspect-ratio:1;border:4px solid #1f2b0f;background:#a4c43f;touch-action:none}
+.pad{display:grid;grid-template-columns:repeat(3,56px);grid-template-rows:repeat(2,56px);gap:6px}
+.pad button{font:inherit;font-size:18px;border:3px solid #1f2b0f;background:#8aab2c;color:#1f2b0f;border-radius:8px;touch-action:manipulation}
+.pad button:active{background:#1f2b0f;color:#9bbc3a}
+.ov{position:absolute;inset:0;background:#9bbc3a;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;text-align:center;padding:24px;line-height:1.8;z-index:5}
+.ov h2{font-size:18px;margin:0}.ov p{font-size:11px;margin:0}
+.btn{font:inherit;font-size:12px;padding:14px 18px;border:3px solid #1f2b0f;background:#1f2b0f;color:#9bbc3a;border-radius:6px}
+/* ENVELOPE */
+#env{background:radial-gradient(circle at 50% 35%,#1d3a7a,#0a1030);gap:34px}
+.env{position:relative;width:min(78vw,300px);height:min(52vw,200px);perspective:900px}
+.env>*{position:absolute;inset:0}
+.env .back{background:#2158c9;border-radius:6px}
+.env .paper{inset:8% 9%;background:#fff;color:#2158c9;display:flex;align-items:center;justify-content:center;font-size:30px;transition:transform .9s .5s;z-index:1}
+.env .front{background:#3b82f6;clip-path:polygon(0 0,50% 56%,100% 0,100% 100%,0 100%);z-index:2}
+.env .flap{bottom:auto;height:56%;background:#6ea8ff;clip-path:polygon(0 0,100% 0,50% 100%);transform-origin:top;transition:transform .8s;z-index:3}
+.env.open .flap{transform:rotateX(180deg);z-index:0}
+.env.open .paper{transform:translateY(-45%)}
+.fp{position:relative;width:104px;height:104px;border-radius:50%;border:2px solid #6ea8ff55;background:#0b1a4a;touch-action:none;cursor:pointer;box-shadow:0 0 24px #3b82f655}
+.fp svg{position:absolute;left:50%;top:50%;width:70px;height:70px;margin:-35px 0 0 -35px;fill:none;stroke:#4a6fb5;stroke-width:2.2;stroke-linecap:round}
+.fp .fill{position:absolute;left:0;right:0;bottom:0;height:0;overflow:hidden;border-radius:0 0 52px 52px;transition:height 1.5s linear}
+.fp .fill svg{top:auto;bottom:17px;margin-top:0;stroke:#9fd0ff;filter:drop-shadow(0 0 4px #6ea8ff)}
+.fp.hold .fill{height:100%}
+.fp.hold{box-shadow:0 0 34px #6ea8ffaa}
+#env .hint{color:#a9c4ff;font-size:10px;text-align:center;line-height:1.8}
+/* RAIN */
+#rain{background:#050a1e;padding:0}
+#rc{position:absolute;inset:0;width:100%;height:100%}
+.msg{position:relative;width:min(92vw,520px);max-height:84%;overflow-y:auto;background:#050a1ecc;border:1px solid #3b82f666;border-radius:10px;padding:22px 18px;font-family:Georgia,"Times New Roman",serif;font-size:17px;line-height:1.65;-webkit-user-select:text;user-select:text}
+.msg p{margin:0 0 14px}
+.w{display:inline-block;white-space:nowrap}
+.c{display:inline-block;opacity:0;animation:dr .8s cubic-bezier(.2,.7,.3,1) forwards}
+@keyframes dr{from{opacity:0;transform:translateY(-70vh);color:#6ea8ff}to{opacity:1;transform:none;color:#eaf2ff}}
+@media (prefers-reduced-motion:reduce){.c{animation-duration:.01s}}
+</style>
+</head>
+<body>
+
+<section class="st on" id="boot">
+  <div class="mac">
+    <div class="scr">
+      <canvas id="face" width="18" height="10"></canvas>
+      <p id="bt" class="blink">INGRESA EL<br>DISCO DURO</p>
+      <div class="bar" id="bar"><i></i></div>
+    </div>
+    <div class="mfoot"><div class="slot" id="slot"></div></div>
+  </div>
+  <div id="floppy" role="button" aria-label="Insertar disco duro"></div>
+  <div class="hint">toca el disco para insertarlo</div>
+</section>
+
+<section class="st" id="game">
+  <div class="ov" id="intro">
+    <h2>NIVEL 1</h2>
+    <p>Come 10 gatitas</p>
+    <p>Cada gatita vale 10 puntos</p>
+    <button class="btn" id="play">JUGAR</button>
+  </div>
+  <div class="ov" id="won" style="display:none"><h2>¡NIVEL<br>COMPLETO!</h2><p>100 puntos</p></div>
+  <div class="hud"><span id="sc">0000</span><span id="ct">0/10</span></div>
+  <canvas id="cv" width="320" height="320"></canvas>
+  <div class="pad">
+    <span></span><button data-d="u" aria-label="Arriba">▲</button><span></span>
+    <button data-d="l" aria-label="Izquierda">◀</button><button data-d="d" aria-label="Abajo">▼</button><button data-d="r" aria-label="Derecha">▶</button>
+  </div>
+</section>
+
+<section class="st" id="env">
+  <div class="env" id="envelope"><div class="back"></div><div class="paper">♥</div><div class="front"></div><div class="flap"></div></div>
+  <div class="fp" id="fp">
+    <svg viewBox="0 0 40 40"><path d="M6 20a14 14 0 0 1 28 0"/><path d="M11 22v-2a9 9 0 0 1 18 0v4"/><path d="M16 30v-9a4 4 0 0 1 8 0v6"/><path d="M20 21v12"/><path d="M12 28c0 4 1 6 2 8"/><path d="M28 24c0 5-1 8-3 11"/></svg>
+    <div class="fill"><svg viewBox="0 0 40 40"><path d="M6 20a14 14 0 0 1 28 0"/><path d="M11 22v-2a9 9 0 0 1 18 0v4"/><path d="M16 30v-9a4 4 0 0 1 8 0v6"/><path d="M20 21v12"/><path d="M12 28c0 4 1 6 2 8"/><path d="M28 24c0 5-1 8-3 11"/></svg></div>
+  </div>
+  <div class="hint" id="eh">Coloca tu dedo<br>y mantenlo presionado</div>
+</section>
+
+<section class="st" id="rain">
+  <canvas id="rc"></canvas>
+  <div class="msg" id="msg"></div>
+</section>
+
+<script>
+const $=s=>document.querySelector(s);
+const show=id=>{document.querySelectorAll('.st').forEach(e=>e.classList.remove('on'));$('#'+id).classList.add('on')};
+
+/* ---------- BOOT ---------- */
+(function(){
+  const rows=[".xx.....xx.....xx.",".xx.....xx.....xx.",".xx.....xx.....xx.","........xx........","........xx........","........xx........","......xxxx........","..................","...x..........x...","....xxxxxxxxxx...."];
+  const g=$('#face').getContext('2d');g.fillStyle='#1b2a3a';
+  rows.forEach((r,y)=>[...r].forEach((c,x)=>c=='x'&&g.fillRect(x,y,1,1)));
+})();
+let inserted=false;
+function insert(){
+  if(inserted)return;inserted=true;
+  $('#floppy').classList.add('in');
+  setTimeout(()=>{
+    const t=$('#bt');t.classList.remove('blink');t.innerHTML='CARGANDO...';
+    $('#bar').style.display='block';
+    requestAnimationFrame(()=>requestAnimationFrame(()=>$('#bar i').style.width='100%'));
+    setTimeout(()=>show('game'),1800);
+  },1000);
+}
+$('#floppy').onclick=insert;$('#slot').onclick=insert;
+
+/* ---------- JUEGO ---------- */
+const N=20,C=16,cv=$('#cv'),X=cv.getContext('2d'),DK='#1f2b0f';
+const CAT=["10001","11111","10101","11111","01110"];
+let sn,dir,q,cat,score=0,cats=0,run=false,timer;
+function resetSnake(){sn=[{x:10,y:10},{x:9,y:10},{x:8,y:10}];dir={x:1,y:0};q=[];}
+function place(){do{cat={x:Math.floor(Math.random()*N),y:Math.floor(Math.random()*N)}}while(sn.some(s=>s.x==cat.x&&s.y==cat.y))}
+function turn(dx,dy){
+  const l=q.length?q[q.length-1]:dir;
+  if((l.x===-dx&&l.y===-dy)||(l.x===dx&&l.y===dy))return;
+  if(q.length<3)q.push({x:dx,y:dy});
+}
+function draw(){
+  X.clearRect(0,0,320,320);
+  X.fillStyle=DK;
+  sn.forEach(s=>X.fillRect(s.x*C+1,s.y*C+1,C-2,C-2));
+  const u=C/5;
+  CAT.forEach((r,j)=>[...r].forEach((c,i)=>c=='1'&&X.fillRect(cat.x*C+i*u,cat.y*C+j*u,u+.5,u+.5)));
+}
+function hud(){$('#sc').textContent=String(score).padStart(4,'0');$('#ct').textContent=cats+'/10';}
+function tick(){
+  if(!run)return;
+  if(q.length)dir=q.shift();
+  const h={x:(sn[0].x+dir.x+N)%N,y:(sn[0].y+dir.y+N)%N};
+  if(sn.slice(0,-1).some(s=>s.x==h.x&&s.y==h.y)){
+    cv.style.opacity=.3;setTimeout(()=>cv.style.opacity=1,200);
+    resetSnake();place();
+  }else{
+    sn.unshift(h);
+    if(h.x==cat.x&&h.y==cat.y){
+      score+=10;cats++;hud();
+      if(score>=100){draw();win();return}
+      place();
+    }else sn.pop();
+  }
+  draw();
+  timer=setTimeout(tick,Math.max(75,130-cats*5));
+}
+function win(){
+  run=false;clearTimeout(timer);
+  $('#won').style.display='flex';
+  setTimeout(()=>show('env'),1800);
+}
+$('#play').onclick=()=>{
+  $('#intro').style.display='none';
+  score=0;cats=0;hud();resetSnake();place();draw();run=true;timer=setTimeout(tick,300);
+};
+const dirs={u:[0,-1],d:[0,1],l:[-1,0],r:[1,0]};
+document.querySelectorAll('.pad button').forEach(b=>{
+  const f=e=>{e.preventDefault();turn(...dirs[b.dataset.d])};
+  b.addEventListener('pointerdown',f);
+});
+addEventListener('keydown',e=>{
+  const m={ArrowUp:'u',ArrowDown:'d',ArrowLeft:'l',ArrowRight:'r',w:'u',s:'d',a:'l',d:'r'}[e.key];
+  if(m){e.preventDefault();turn(...dirs[m])}
+});
+let tx,ty;
+$('#game').addEventListener('touchstart',e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY},{passive:true});
+$('#game').addEventListener('touchend',e=>{
+  if(tx==null)return;
+  const dx=e.changedTouches[0].clientX-tx,dy=e.changedTouches[0].clientY-ty;
+  if(Math.max(Math.abs(dx),Math.abs(dy))<24)return;
+  Math.abs(dx)>Math.abs(dy)?turn(dx>0?1:-1,0):turn(0,dy>0?1:-1);tx=null;
+});
+
+/* ---------- SOBRE + HUELLA ---------- */
+const fp=$('#fp');let hold=null,opened=false;
+function startHold(e){
+  e.preventDefault();if(opened)return;
+  fp.classList.add('hold');
+  hold=setTimeout(()=>{
+    opened=true;$('#envelope').classList.add('open');$('#eh').textContent='♥';
+    setTimeout(()=>{show('rain');startRain()},1800);
+  },1500);
+}
+function endHold(){if(opened)return;fp.classList.remove('hold');clearTimeout(hold)}
+fp.addEventListener('pointerdown',startHold);
+['pointerup','pointerleave','pointercancel'].forEach(t=>fp.addEventListener(t,endHold));
+
+/* ---------- LLUVIA DE LETRAS ---------- */
+const TEXT=[
+"No te voy a felicitar, porque sé que no te gusta.",
+"Pero al menos quería dedicarte estas palabras:",
+"Eres un hombre maravilloso, trabajador, inteligente, luchador (porque te gusta pelear conmigo), un gran hijo, hermano, novio (aunque tengas mozas), guapo, y sobre todo es un honor y un orgullo poder decir que eres mi enamorado. Eres multifacético y un autodidacta magistral. Puede que a veces tengas malos ratos, pero siempre sabes qué decir y cómo solucionar las cosas. Sinceramente, agradezco haberte conocido, porque aunque no buscabas ni querías nada de mí, te metiste en mi alma y corazón de una manera tan sutil que nunca me di cuenta de cuándo empezó. Eres especial y espectacular. Deseo y espero poder seguir acompañándote.",
+"Te amo ♥"
+];
+function startRain(){
+  const cvs=$('#rc'),g=cvs.getContext('2d');
+  const size=16;let cols,drops;
+  const fit=()=>{cvs.width=innerWidth;cvs.height=innerHeight;cols=Math.ceil(cvs.width/size);drops=Array.from({length:cols},()=>Math.random()*-40)};
+  fit();addEventListener('resize',fit);
+  const pool="teamoTEAMO♥ABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
+  g.font=size+"px monospace";
+  setInterval(()=>{
+    g.fillStyle='rgba(5,10,30,.14)';g.fillRect(0,0,cvs.width,cvs.height);
+    g.fillStyle='#4d8dff';g.font=size+"px monospace";
+    drops.forEach((d,i)=>{
+      g.fillText(pool[Math.floor(Math.random()*pool.length)],i*size,d*size);
+      if(d*size>cvs.height&&Math.random()>.975)drops[i]=0;
+      drops[i]+=1;
+    });
+  },55);
+  const box=$('#msg');let t=.6;
+  TEXT.forEach(par=>{
+    const p=document.createElement('p');
+    par.split(' ').forEach(w=>{
+      const s=document.createElement('span');s.className='w';
+      [...w].forEach(ch=>{
+        const c=document.createElement('span');c.className='c';c.textContent=ch;
+        c.style.animationDelay=(t+=.022+Math.random()*.01)+'s';
+        s.appendChild(c);
+      });
+      p.appendChild(s);p.appendChild(document.createTextNode(' '));
+    });
+    box.appendChild(p);t+=.5;
+  });
+  const sc=setInterval(()=>{box.scrollTop=box.scrollHeight},250);
+  setTimeout(()=>clearInterval(sc),(t+1)*1000);
+}
+</script>
+</body>
+</html>
